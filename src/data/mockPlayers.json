@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "position": "QB",
+    "overall": 92,
+    "age": 28
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "position": "RB",
+    "overall": 85,
+    "age": 24
+  },
+  {
+    "id": 3,
+    "name": "Mike Johnson",
+    "position": "WR",
+    "overall": 88,
+    "age": 26
+  },
+  {
+    "id": 4,
+    "name": "Chris Brown",
+    "position": "CB",
+    "overall": 80,
+    "age": 23
+  }
+]
