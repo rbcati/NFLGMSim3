@@ -57,3 +57,12 @@
 <script src="script.js"></script>
 </body>
 </html>
+const routes = ["hub","roster","schedule","standings","trade","draft","settings"];
+function show(route) {
+  routes.forEach(r => document.getElementById(r).hidden = (r !== route));
+}
+window.addEventListener("hashchange", () => {
+  const seg = location.hash.replace("#/","") || "hub";
+  show(routes.includes(seg) ? seg : "hub");
+});
+window.dispatchEvent(new Event("hashchange"));
