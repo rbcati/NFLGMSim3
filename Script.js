@@ -149,18 +149,47 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('season-info').textContent = `Season: ${gameState.season} | Week: ${gameState.week} | Record: ${userTeam.wins}-${userTeam.losses}`;
     }
 
-    function renderRoster(team) {
-        document.getElementById('roster-header').textContent = `${team.name} Roster`;
-        const coachesDiv = document.getElementById('roster-coaches');
-        coachesDiv.innerHTML = `<strong>HC:</strong> ${team.coaches.headCoach} | <strong>OC:</strong> ${team.coaches.offCoordinator} | <strong>DC:</strong> ${team.coaches.defCoordinator}`;
-        
-        const table = document.getElementById('rosterTable');
-        table.innerHTML = `<thead><tr><th>Name</th><th>Position</th><th>Overall</th></tr></thead>`;
-        const tbody = document.createElement('tbody');
-        team.players.sort((a,b) => b.ovr - a.ovr).forEach(p => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.pos}</td><td>${p.ovr}</td></tr>`;
-        });
-        table.appendChild(tbody);
+    function renderRoster(teamId=0){
+  const team = league.teams[teamId];
+  const rows = team.roster
+    .slice().sort((a,b)=>b.ovr-a.ovr)
+    .map(p=>`<tr data-pid="${p.id}">
+      <td>${p.name}</td><td>${p.pos}</td>
+      <td class="num">${p.ovr}</td><td class="num">${p.age}</td>
+    </tr>`).join("");
+  const html = `<thead><tr><th>Name</th><th>Pos</th><th class="num">OVR</th><th class="num">Age</th></tr></thead><tbody>${rows}</tbody>`;
+  const tbl = document.getElementById("rosterTable");
+  tbl.classList.add("row-hover");
+  tbl.innerHTML = html;
+  tbl.onclick = (e)=>{
+    const tr = e.target.closest("tr[data-pid]");
+    if (!tr) return;
+    const pid = tr.getAttribute("data-pid");
+    const player = team.roster.find(x=>x.id===pid);
+    openPlayerModal(player, team);
+  };
+}
+
+function openPlayerModal(player, team){
+  document.getElementById("pName").textContent = `${player.name} · ${player.pos} · ${team.abv}`;
+  document.getElementById("pMeta").textContent = `Age ${player.age} · OVR ${player.ovr}`;
+  const statRows = [
+    ["Awareness", player.awr ?? rnd(50,90)],
+    ["Speed", player.spd ?? rnd(50,90)],
+    ["Strength", player.str ?? rnd(50,90)],
+    ["Agility", player.agl ?? rnd(50,90)],
+    ["Endurance", player.end ?? rnd(50,90)]
+  ].map(([k,v])=>`<tr><td>${k}</td><td class="num">${v}</td></tr>`).join("");
+  document.getElementById("pStats").innerHTML =
+    `<thead><tr><th>Attribute</th><th class="num">Value</th></tr></thead><tbody>${statRows}</tbody>`;
+  document.getElementById("playerModal").hidden = false;
+}
+function closePlayerModal(){ document.getElementById("playerModal").hidden = true; }
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+document.getElementById("playerClose").onclick = closePlayerModal;
+document.getElementById("playerModal").addEventListener("click", (e)=>{
+  if (e.target.id==="playerModal") closePlayerModal();
+});
     }
     
     function renderLeagueView() {
