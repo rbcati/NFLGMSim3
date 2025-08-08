@@ -1,176 +1,228 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- CONFIG & CONSTANTS ---
-    const NUM_TEAMS = 32;
-    const ROSTER_SIZE = 22;
-    const NUM_WEEKS = 18;
-    const PLAYOFF_TEAMS = 14;
-
-    // --- GAME STATE ---
+    // --- STATE & CONSTANTS ---
     let gameState = {};
-    
-    // Name generation arrays and functions (copy from previous script)
-    const FIRST_NAMES = ["Liam", "Noah", "Oliver", "Elijah", "James", "William", "Henry", "Lucas", "Ben", "Theo", "Leo", "Mateo", "Jack", "Levi", "Asher", "John", "Finn", "Kai", "Axel", "Ezra", "Jaxon", "Miles", "Cooper", "Caleb", "Nolan", "Ryker", "Zane"];
-    const LAST_NAMES = ["Smith", "Jones", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee", "Walker", "Hall", "Allen", "Young"];
-    const POSITIONS = ["QB", "RB", "WR", "WR", "TE", "OL", "OL", "OL", "DL", "DL", "LB", "LB", "CB", "CB", "S", "S"];
-    const CITIES = ["Liberty", "Keystone", "Veridian", "Oakhaven", "Redwater", "Silvercreek", "Ironridge", "Azure", "Goldport", "Emerald", "Obsidian", "Crimson", "Granite", "Cedar", "Juniper", "Delta", "Metro", "Bay", "Port", "Summit", "Cascade", "Pinnacle", "Canyon", "River", "Springfield", "Brookside", "Fairview", "Lakewood", "Hilltop", "Bridgeport", "Westwood", "Eastwood"];
-    const MASCOTS = ["Vipers", "Titans", "Wizards", "Grizzlies", "Jets", "Sharks", "Hawks", "Eagles", "Lions", "Tigers", "Bears", "Stallions", "Raptors", "Dragons", "Phantoms", "Reapers", "Giants", "Commandos", "Bulldogs", "Panthers", "Wolverines", "Rams", "Storm", "Blizzard", "Avalanche", "Hurricanes", "Volcanoes", "Earthquakes", "Comets", "Rockets", "Stars", "Galaxy"];
+    const FIRST_NAMES = ["Liam","Noah","Oliver","Elijah","James","William","Henry","Lucas","Ben","Theo","Leo","Mateo","Jack","Levi","Asher","John","Finn","Kai","Axel","Ezra","Jaxon","Miles","Cooper","Caleb","Nolan","Ryker","Zane"];
+    const LAST_NAMES = ["Smith","Jones","Williams","Brown","Davis","Miller","Wilson","Moore","Taylor","Anderson","Thomas","Jackson","White","Harris","Martin","Thompson","Garcia","Martinez","Robinson","Clark","Rodriguez","Lewis","Lee","Walker","Hall","Allen","Young"];
+    const COACH_LAST_NAMES = ["Belichick", "Walsh", "Landry", "Lombardi", "Shula", "Brown", "Madden", "Reid", "Parcells", "Gibbs"];
+    const CITIES = ["Liberty","Keystone","Veridian","Oakhaven","Redwater","Silvercreek","Ironridge","Azure","Goldport","Emerald","Obsidian","Crimson","Granite","Cedar","Juniper","Delta","Metro","Bay","Port","Summit","Cascade","Pinnacle","Canyon","River","Springfield","Brookside","Fairview","Lakewood","Hilltop","Bridgeport","Westwood","Eastwood"];
+    const MASCOTS = ["Vipers","Titans","Wizards","Grizzlies","Jets","Sharks","Hawks","Eagles","Lions","Tigers","Bears","Stallions","Raptors","Dragons","Phantoms","Reapers","Giants","Commandos","Bulldogs","Panthers","Wolverines","Rams","Storm","Blizzard","Avalanche","Hurricanes","Volcanoes","Earthquakes","Comets","Rockets","Stars","Galaxy"];
+    const POSITIONS = ["QB","RB","WR","TE","OL","DL","LB","CB","S"];
 
-    const randomInt = (max) => Math.floor(Math.random() * max);
-    const getRandomElement = (arr) => arr[randomInt(arr.length)];
-
-    const generatePlayerName = () => `${getRandomElement(FIRST_NAMES)} ${getRandomElement(LAST_NAMES)}`;
-    const generateTeamName = () => `${getRandomElement(CITIES)} ${getRandomElement(MASCOTS)}`;
-
-    const generatePlayer = (ageMin = 21, ageMax = 34) => ({
-        id: `p${Date.now()}${randomInt(1000)}`,
-        name: generatePlayerName(),
-        pos: getRandomElement(POSITIONS),
-        age: ageMin + randomInt(ageMax - ageMin + 1),
-        off: 30 + randomInt(50),
-        def: 30 + randomInt(50),
-        getOvr: function() { return Math.round((this.off + this.def) / 2); },
-    });
-
-    // --- ELEMENT SELECTORS ---
-    // Caching DOM elements for performance and cleanliness
-    const hubView = document.getElementById('hubView');
-    const gameOverView = document.getElementById('gameOverView');
-    const rosterView = document.getElementById('rosterView');
-    const standingsView = document.getElementById('standingsView');
-    const trainingView = document.getElementById('trainingView');
-    const tradeView = document.getElementById('tradeView');
-    const offseasonView = document.getElementById('offseasonView');
-    const allViews = [hubView, gameOverView, rosterView, standingsView, trainingView, tradeView, offseasonView];
-    // Add all other element selectors here...
+    // --- DOM ELEMENTS ---
+    const views = document.querySelectorAll('.view');
+    const header = document.getElementById('header');
     const logEl = document.getElementById('log');
 
-    // --- CORE LOGIC (most functions are the same, paste them here) ---
-    // (init, startNewGame, saveGame, simulateGame, simulateWeek, startPlayoffs, startOffseason)
-    // All of the game's brainpower from the previous script goes here.
-    // I am omitting them for brevity, but YOU MUST PASTE THEM IN.
-
-    // --- UI & DISPLAY LOGIC ---
-    const showView = (viewToShow) => {
-        allViews.forEach(view => view.classList.add('hidden'));
-        if(viewToShow) viewToShow.classList.remove('hidden');
-
-        // Refresh data when showing a view
-        if (viewToShow === rosterView) updateRosterUI();
-        if (viewToShow === standingsView) updateStandingsUI();
-        if (viewToShow === tradeView) updateTradeUI();
-        if (viewToShow === trainingView) updateTrainingUI();
-    };
-    
-    const logMessage = (msg) => {
-        logEl.innerHTML = `<div>${new Date().toLocaleTimeString()}: ${msg}</div>` + logEl.innerHTML;
-    };
-    
-    // ALL YOUR UPDATE UI FUNCTIONS GO HERE
-    // (updateUI, updateRosterUI, updateStandingsUI, etc.)
-
-    // --- EVENT HANDLERS (The Fix!) ---
-    const handleSimWeek = () => simulateWeek();
-    const handleTrainPlayer = () => {
-        const playerId = document.getElementById('trainingPlayerSelect').value;
-        const attribute = document.getElementById('trainingAttributeSelect').value;
-        if (!playerId || gameState.playerTrainedThisWeek) return;
-
-        const player = gameState.teams[gameState.userTeamIndex].players.find(p => p.id === playerId);
-        player[attribute] = Math.min(99, player[attribute] + 1);
-        
-        logMessage(`💪 Trained ${player.name} in ${attribute === 'off' ? 'Offense' : 'Defense'}. New rating: ${player[attribute]}`);
-        gameState.playerTrainedThisWeek = true;
-        saveGame();
-        updateTrainingUI();
+    // --- CORE GAME LOGIC ---
+    const generateName = (nameList) => nameList[Math.floor(Math.random() * nameList.length)];
+    const generatePlayer = () => ({ name: `${generateName(FIRST_NAMES)} ${generateName(LAST_NAMES)}`, pos: generateName(POSITIONS), ovr: 40 + Math.floor(Math.random() * 60) });
+    const generateTeam = (id) => {
+        const team = {
+            id,
+            name: `${generateName(CITIES)} ${generateName(MASCOTS)}`,
+            players: Array.from({ length: 22 }, generatePlayer),
+            coaches: {
+                headCoach: `${generateName(FIRST_NAMES)} ${generateName(COACH_LAST_NAMES)}`,
+                offCoordinator: `${generateName(FIRST_NAMES)} ${generateName(LAST_NAMES)}`,
+                defCoordinator: `${generateName(FIRST_NAMES)} ${generateName(LAST_NAMES)}`,
+            },
+            wins: 0, losses: 0
+        };
+        team.ovr = Math.round(team.players.reduce((sum, p) => sum + p.ovr, 0) / team.players.length);
+        return team;
     };
 
-    const handleProposeTrade = () => {
-        // ... same trade logic as before
-        const userTeam = gameState.teams[gameState.userTeamIndex];
-        const partnerId = parseInt(document.getElementById('tradePartnerSelect').value);
-        const partnerTeam = gameState.teams.find(t => t.id === partnerId);
-        
-        const userPlayerIds = Array.from(document.getElementById('userAssets').selectedOptions).map(opt => opt.value);
-        const partnerPlayerIds = Array.from(document.getElementById('partnerAssets').selectedOptions).map(opt => opt.value);
+    function startNewGame() {
+        gameState = {
+            season: 1,
+            week: 1,
+            userTeamId: null,
+            teams: Array.from({ length: 32 }, (_, i) => generateTeam(i)),
+            gamePhase: 'TEAM_SELECTION', // NEW game phase manager
+        };
+        render();
+    }
 
-        if (userPlayerIds.length === 0 || partnerPlayerIds.length === 0) {
-            alert("You must select at least one player from each team.");
+    function selectTeam(teamId) {
+        gameState.userTeamId = teamId;
+        gameState.gamePhase = 'REGULAR_SEASON';
+        logMessage(`You have been hired as the GM of the ${gameState.teams[teamId].name}! Good luck.`);
+        render();
+    }
+
+    function simulateWeek() {
+        if (gameState.gamePhase !== 'REGULAR_SEASON') return;
+
+        if (gameState.week > 18) {
+            logMessage("Regular season has ended. Starting playoffs...");
+            gameState.gamePhase = 'PLAYOFFS';
+            // Simple playoff simulation
+            logMessage(`The ${generateName(MASCOTS)} have won the championship!`);
+            gameState.gamePhase = 'OFFSEASON';
+            render();
             return;
         }
 
-        const userPlayers = userPlayerIds.map(id => userTeam.players.find(p => p.id === id));
-        const partnerPlayers = partnerPlayerIds.map(id => partnerTeam.players.find(p => p.id === id));
-        
-        const userValue = userPlayers.reduce((sum, p) => sum + p.getOvr(), 0);
-        const partnerValue = partnerPlayers.reduce((sum, p) => sum + p.getOvr(), 0);
-
-        // AI Logic: Slightly improved - they want more value in return
-        if (partnerValue < userValue * 1.1) {
-            alert(`Trade rejected. The ${partnerTeam.name} want more value in return.`);
-            logMessage(`Trade proposal to ${partnerTeam.name} was rejected.`);
-        } else {
-            alert(`Trade accepted! The ${partnerTeam.name} agree to the deal.`);
-            logMessage(`Trade completed with ${partnerTeam.name}.`);
+        // Simple sim logic
+        gameState.teams.forEach(team => {
+            const opponent = gameState.teams[Math.floor(Math.random() * 32)];
+            if (team.id === opponent.id) return; // Can't play yourself
             
-            userTeam.players = userTeam.players.filter(p => !userPlayerIds.includes(p.id)).concat(partnerPlayers);
-            partnerTeam.players = partnerTeam.players.filter(p => !partnerPlayerIds.includes(p.id)).concat(userPlayers);
-            
-            saveGame();
-            updateTradeUI();
-        }
-    };
-    
-    // EVENT DELEGATION for dynamic content
-    const handleOffseasonTableClick = (e) => {
-        const target = e.target;
-        if (target.matches('[data-action="sign-fa"]')) {
-            const playerId = target.dataset.playerId;
-            // ... sign free agent logic ...
-            logMessage(`Signed FA with ID: ${playerId}`);
-        }
-        if (target.matches('[data-action="draft-player"]')) {
-            const playerId = target.dataset.playerId;
-            // ... draft player logic ...
-            logMessage(`Drafted player with ID: ${playerId}`);
-        }
-    };
-
-
-    // --- ATTACH EVENT LISTENERS ---
-    const attachEventListeners = () => {
-        // Main Hub buttons
-        document.getElementById('simWeekBtn').addEventListener('click', handleSimWeek);
-        document.getElementById('rosterBtn').addEventListener('click', () => showView(rosterView));
-        document.getElementById('standingsBtn').addEventListener('click', () => showView(standingsView));
-        document.getElementById('tradeBtn').addEventListener('click', () => showView(tradeView));
-        document.getElementById('trainingBtn').addEventListener('click', () => showView(trainingView));
-        
-        // Back buttons
-        document.querySelectorAll('.btn-back').forEach(btn => {
-            btn.addEventListener('click', () => showView(hubView));
+            const winChance = (team.ovr / (team.ovr + opponent.ovr)) * 100;
+            if (Math.random() * 100 < winChance) {
+                team.wins++;
+            } else {
+                team.losses++;
+            }
         });
 
-        // Specific view actions
-        document.getElementById('confirmTrainingBtn').addEventListener('click', handleTrainPlayer);
-        document.getElementById('proposeTradeBtn').addEventListener('click', handleProposeTrade);
-        document.getElementById('startNewGameBtn').addEventListener('click', () => startNewGame(false));
-
-        // Event Delegation for dynamic tables
-        document.getElementById('freeAgentsTable').addEventListener('click', handleOffseasonTableClick);
-        document.getElementById('draftBoardTable').addEventListener('click', handleOffseasonTableClick);
-    };
-
-    // --- INITIALIZE GAME ---
-    // MAKE SURE ALL YOUR HELPER AND CORE LOGIC FUNCTIONS ARE PASTED ABOVE THIS LINE
-    // init() function should call attachEventListeners() at the end.
+        logMessage(`Simulated Week ${gameState.week}.`);
+        gameState.week++;
+        render();
+    }
     
-    // Example:
-    // function init() {
-    //     ... load or start new game ...
-    //     updateUI();
-    //     attachEventListeners();
-    // }
+    function startNewSeason() {
+        gameState.season++;
+        gameState.week = 1;
+        gameState.teams.forEach(t => { t.wins = 0; t.losses = 0; });
+        gameState.gamePhase = 'REGULAR_SEASON';
+        logMessage(`Welcome to Season ${gameState.season}! A new year begins.`);
+        render();
+    }
+
+    // --- RENDER FUNCTIONS (THE SECRET SAUCE) ---
+    function render() {
+        // Hide all views first
+        views.forEach(view => view.classList.add('hidden'));
+
+        // Show the correct view based on game phase
+        if (gameState.gamePhase === 'TEAM_SELECTION') {
+            document.getElementById('teamSelectView').classList.remove('hidden');
+            renderTeamSelect();
+        } else {
+            document.getElementById('hubView').classList.remove('hidden');
+            renderHub();
+        }
+    }
+
+    function renderTeamSelect() {
+        const teamSelectList = document.getElementById('teamSelectList');
+        teamSelectList.innerHTML = '';
+        gameState.teams.forEach(team => {
+            const card = document.createElement('div');
+            card.className = 'team-card';
+            card.dataset.teamId = team.id;
+            card.innerHTML = `
+                <h3>${team.name}</h3>
+                <p>Overall: ${team.ovr}</p>
+            `;
+            teamSelectList.appendChild(card);
+        });
+    }
+
+    function renderHub() {
+        const userTeam = gameState.teams[gameState.userTeamId];
+        header.textContent = `GM: ${userTeam.name}`;
+        document.getElementById('team-name-header').textContent = `${userTeam.name} Front Office`;
+        document.getElementById('season-info').textContent = `Season: ${gameState.season} | Week: ${gameState.week} | Record: ${userTeam.wins}-${userTeam.losses}`;
+    }
+
+    function renderRoster(team) {
+        document.getElementById('roster-header').textContent = `${team.name} Roster`;
+        const coachesDiv = document.getElementById('roster-coaches');
+        coachesDiv.innerHTML = `<strong>HC:</strong> ${team.coaches.headCoach} | <strong>OC:</strong> ${team.coaches.offCoordinator} | <strong>DC:</strong> ${team.coaches.defCoordinator}`;
+        
+        const table = document.getElementById('rosterTable');
+        table.innerHTML = `<thead><tr><th>Name</th><th>Position</th><th>Overall</th></tr></thead>`;
+        const tbody = document.createElement('tbody');
+        team.players.sort((a,b) => b.ovr - a.ovr).forEach(p => {
+            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.pos}</td><td>${p.ovr}</td></tr>`;
+        });
+        table.appendChild(tbody);
+    }
     
-    init(); // Run the game
+    function renderLeagueView() {
+        const table = document.getElementById('leagueTable');
+        table.innerHTML = `<thead><tr><th>Team</th><th>Record</th><th>OVR</th><th></th></tr></thead>`;
+        const tbody = document.createElement('tbody');
+        gameState.teams.sort((a,b) => b.wins - a.wins).forEach(team => {
+            const tr = document.createElement('tr');
+            if (team.id === gameState.userTeamId) tr.className = 'user-team-row';
+            tr.innerHTML = `
+                <td>${team.name}</td>
+                <td>${team.wins}-${team.losses}</td>
+                <td>${team.ovr}</td>
+                <td><button class="btn-secondary" data-action="view-roster" data-team-id="${team.id}">View Roster</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+    }
+    
+    function renderOffseason() {
+        const summary = document.getElementById('offseason-summary');
+        const userTeam = gameState.teams[gameState.userTeamId];
+        summary.innerHTML = `
+            <p>The season has concluded.</p>
+            <p>Your Final Record: ${userTeam.wins}-${userTeam.losses}.</p>
+            <p>Get ready for the draft and free agency!</p>
+        `;
+        document.getElementById('offseasonView').classList.remove('hidden');
+    }
+
+    function logMessage(msg) {
+        logEl.innerHTML = `<div>${msg}</div>` + logEl.innerHTML;
+    }
+
+    // --- EVENT LISTENERS ---
+    function attachEventListeners() {
+        const container = document.querySelector('.container');
+        container.addEventListener('click', (e) => {
+            const target = e.target;
+
+            // Team Selection
+            if (target.closest('.team-card')) {
+                const teamId = parseInt(target.closest('.team-card').dataset.teamId, 10);
+                selectTeam(teamId);
+            }
+
+            // Sim Week Button
+            if (target.id === 'simWeekBtn') {
+                simulateWeek();
+            }
+            
+            // Start New Season Button
+            if (target.id === 'startNewSeasonBtn') {
+                startNewSeason();
+            }
+
+            // Main Hub Buttons (to switch views)
+            if (target.dataset.view) {
+                views.forEach(v => v.classList.add('hidden'));
+                const viewToShow = document.getElementById(target.dataset.view);
+                viewToShow.classList.remove('hidden');
+                
+                if (target.dataset.view === 'rosterView') renderRoster(gameState.teams[gameState.userTeamId]);
+                if (target.dataset.view === 'leagueView') renderLeagueView();
+            }
+
+            // Back Buttons
+            if (target.classList.contains('btn-back')) {
+                render(); // Just re-render the main hub
+            }
+            
+            // View Roster button inside League table
+            if (target.dataset.action === 'view-roster') {
+                const teamId = parseInt(target.dataset.teamId, 10);
+                const team = gameState.teams.find(t => t.id === teamId);
+                renderRoster(team);
+                views.forEach(v => v.classList.add('hidden'));
+                document.getElementById('rosterView').classList.remove('hidden');
+            }
+        });
+    }
+
+    // --- INITIALIZATION ---
+    attachEventListeners();
+    startNewGame();
 });
