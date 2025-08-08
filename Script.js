@@ -248,3 +248,105 @@ document.addEventListener('DOMContentLoaded', () => {
     attachEventListeners();
     startNewGame();
 });
+/* state */
+let league = loadLeague() || null;
+
+function seedLeague(name="My League") {
+  const teams = ["BUF","KC","CIN","BAL","SF","DAL","GB","PHI"].map((abv,i)=>({
+    id:i, abv, name:abv, wins:0, losses:0, roster:[]
+  }));
+  // toy schedule: each week next two teams play
+  const schedule = [];
+  for (let w=0; w<16; w++){
+    const games = [];
+    for (let i=0; i<teams.length; i+=2){
+      games.push({home:teams[i].id, away:teams[i+1].id});
+    }
+    schedule.push(games);
+  }
+  // toy players
+  teams.forEach(t=>{
+    for (let i=0;i<30;i++){
+      const pos = ["QB","RB","WR","TE","OL","DL","LB","CB","S"][i%9];
+      const ovr = 60+Math.floor(Math.random()*30);
+      t.roster.push({id:`${t.abv}-${i}`, name:`${t.abv} P${i}`, pos, ovr, age:22+(i%10)});
+    }
+  });
+  return { name, season:2025, week:0, teams, schedule };
+}
+
+function updateTeamRecords(l, game){
+  const home = l.teams[game.home], away = l.teams[game.away];
+  const hs = game.homeScore, as = game.awayScore;
+  if (hs > as){ home.wins++; away.losses++; } else if (as > hs){ away.wins++; home.losses++; }
+}
+
+function renderMeta(){
+  const meta = document.getElementById("leagueMeta");
+  if (!league){ meta.textContent = "No league yet. Create one."; return; }
+  meta.innerHTML = `<div><b>${league.name}</b> · Season ${league.season} · Week ${league.week}</div>`;
+  document.getElementById("weekNum").textContent = league.week;
+}
+
+function renderStandings(l=league){
+  const rows = l.teams
+    .slice().sort((a,b)=> (b.wins-a.wins) || (a.losses-b.losses))
+    .map(t=>`<tr><td>${t.abv}</td><td class="num">${t.wins}-${t.losses}</td></tr>`).join("");
+  document.getElementById("standingsTable").innerHTML =
+    `<thead><tr><th>Team</th><th class="num">Record</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderRoster(teamId=0){
+  const team = league.teams[teamId];
+  const rows = team.roster
+    .slice().sort((a,b)=>b.ovr-a.ovr)
+    .map(p=>`<tr><td>${p.name}</td><td>${p.pos}</td><td class="num">${p.ovr}</td><td class="num">${p.age}</td></tr>`).join("");
+  document.getElementById("rosterTable").innerHTML =
+    `<thead><tr><th>Name</th><th>Pos</th><th class="num">OVR</th><th class="num">Age</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderSchedule(l=league){
+  const w = l.week;
+  const games = l.schedule[w] || [];
+  const html = games.map(g=>{
+    const h=l.teams[g.home], a=l.teams[g.away];
+    const sc = (g.homeScore!=null) ? ` — <b>${g.homeScore}</b> : <b>${g.awayScore}</b>` : "";
+    return `<div>${a.abv} @ ${h.abv}${sc}</div>`;
+  }).join("");
+  document.getElementById("nextWeek").innerHTML = html || "<div class='empty'>Season complete</div>";
+}
+
+async function simWeek(){
+  if (!league) return;
+  const games = league.schedule[league.week] || [];
+  for (const g of games){
+    g.homeScore = Math.floor(Math.random()*40);
+    g.awayScore = Math.floor(Math.random()*40);
+    updateTeamRecords(league, g);
+    await new Promise(r=>setTimeout(r,0));
+  }
+  league.week++;
+  saveLeague(league);
+  renderMeta(); renderStandings(); renderSchedule(); renderRoster();
+}
+
+/* wire UI */
+document.getElementById("newLeagueBtn").onclick = ()=>{
+  league = seedLeague(prompt("League name?") || "My League");
+  saveLeague(league);
+  renderMeta(); renderStandings(); renderSchedule(); renderRoster();
+};
+document.getElementById("simWeekBtn").onclick = simWeek;
+document.getElementById("simSeasonBtn").onclick = async ()=>{
+  while(league && league.week < league.schedule.length) await simWeek();
+};
+document.getElementById("exportBtn").onclick = ()=> exportLeague(league);
+document.getElementById("importFile").onchange = async (e)=>{
+  const f = e.target.files[0]; if (!f) return;
+  league = await importLeague(f);
+  renderMeta(); renderStandings(); renderSchedule(); renderRoster();
+};
+
+/* boot */
+if (!league){ league = seedLeague(); saveLeague(league); }
+renderMeta(); renderStandings(); renderSchedule(); renderRoster();
