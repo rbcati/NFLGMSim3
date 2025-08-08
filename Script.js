@@ -1,3 +1,25 @@
+// persistence.js (stick in Script.js for now)
+const SAVE_KEY = "nflgm:league:v1";
+
+export function saveLeague(league) {
+  localStorage.setItem(SAVE_KEY, JSON.stringify(league));
+}
+export function loadLeague() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+export function exportLeague(league) {
+  const blob = new Blob([JSON.stringify(league, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `${league.name}-league.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+export async function importLeague(file) {
+  const text = await file.text();
+  const league = JSON.parse(text);
+  saveLeague(league); return league;
+}
 document.addEventListener('DOMContentLoaded', () => {
     // --- STATE & CONSTANTS ---
     let gameState = {};
