@@ -136,6 +136,18 @@ window.dispatchEvent(new Event("hashchange"));
     <div id="tradeMsg" style="align-self:center;opacity:.8"></div>
   </div>
 </section>
+    <div>
+      <label>Team B</label>
+      <select id="tradeTeamB"></select>
+      <div id="tradeListB" class="card" style="margin-top:8px;max-height:260px;overflow:auto"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:12px">
+    <button class="btn" id="tradeValidate">Validate</button>
+    <button class="btn primary" id="tradeExecute" disabled>Execute</button>
+    <div id="tradeMsg" style="align-self:center;opacity:.8"></div>
+  </div>
+</section>
         <section id="draft" hidden class="card"><h3>Draft</h3><div class="empty">WIP</div></section>
         <section id="settings" hidden class="card"><h3>Settings</h3><div class="empty">Theme, sliders, etc.</div></section>
       </main>
