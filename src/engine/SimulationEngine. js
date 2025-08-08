@@ -1,0 +1,48 @@
+// src/engine/SimulationEngine.js
+import mockPlayers from '../data/mockPlayers.json';
+
+// Utility to generate random numbers within a range
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Simulate a single play based on team and player ratings
+const simulatePlay = (offenseTeam, defenseTeam, playType) => {
+  const offensePlayer = offenseTeam.find(p => p.position === (playType === 'pass' ? 'QB' : 'RB'));
+  const defensePlayer = defenseTeam.find(p => p.position === 'CB');
+  const offenseRating = offensePlayer?.overall || 80;
+  const defenseRating = defensePlayer?.overall || 80;
+
+  // Weighted probability for play success
+  const successChance = (offenseRating - defenseRating + 50) / 100; // Simplified: 0 to 1
+  const isSuccessful = Math.random() < successChance;
+
+  let playResult = { yards: 0, touchdown: false, turnover: false };
+  if (playType === 'pass') {
+    if (isSuccessful) {
+      playResult.yards = getRandomInt(5, 20);
+      playResult.touchdown = Math.random() < 0.1 && playResult.yards > 10;
+      playResult.turnover = Math.random() < 0.05 && !playResult.touchdown;
+    } else {
+      playResult.yards = getRandomInt(-5, 5);
+      playResult.turnover = Math.random() < 0.1;
+    }
+  } else {
+    if (isSuccessful) {
+      playResult.yards = getRandomInt(3, 15);
+      playResult.touchdown = Math.random() < 0.08 && playResult.yards > 8;
+      playResult.turnover = Math.random() < 0.03 && !playResult.touchdown;
+    } else {
+      playResult.yards = getRandomInt(-2, 3);
+      playResult.turnover = Math.random() < 0.05;
+    }
+  }
+
+  return {
+    playType,
+    offensePlayer: offensePlayer?.name,
+    defensePlayer: defensePlayer?.name,
+    ...playResult,
+  };
+};
+
+// Simulate a full game
+const
