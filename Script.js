@@ -535,3 +535,29 @@ function executeTrade(){
   document.getElementById("tradeExecute").disabled = true;
 }
 function msg(text){ document.getElementById("tradeMsg").textContent = text; }
+const routes = ["hub", "roster", "schedule", "standings", "trade", "draft", "settings"];
+
+function show(route) {
+  routes.forEach(r => {
+    document.getElementById(r).hidden = (r !== route);
+  });
+}
+
+// run this whenever the # part of the URL changes
+window.addEventListener("hashchange", () => {
+  const seg = location.hash.replace("#/", "") || "hub";
+  if (routes.includes(seg)) {
+    show(seg);
+    if (seg === "trade") {
+      renderTradeUI(); // fill the trade dropdowns + checkboxes
+    }
+    if (seg === "roster") {
+      renderRoster(0); // default to team 0’s roster
+    }
+  } else {
+    show("hub");
+  }
+});
+
+// run it once on page load
+window.dispatchEvent(new Event("hashchange"));
