@@ -4,27 +4,83 @@
     "name": "John Doe",
     "position": "QB",
     "overall": 92,
-    "age": 28
+    "age": 28,
+    "stats": {
+      "overall": {
+        "gamesPlayed": 10,
+        "passingYards": 2500,
+        "touchdowns": 20,
+        "interceptions": 5
+      },
+      "weekly": [
+        { "week": 1, "passingYards": 280, "touchdowns": 2, "interceptions": 0 },
+        { "week": 2, "passingYards": 310, "touchdowns": 3, "interceptions": 1 },
+        { "week": 3, "passingYards": 220, "touchdowns": 1, "interceptions": 0 },
+        { "week": 4, "passingYards": 260, "touchdowns": 2, "interceptions": 1 }
+      ]
+    }
   },
   {
     "id": 2,
     "name": "Jane Smith",
     "position": "RB",
     "overall": 85,
-    "age": 24
+    "age": 24,
+    "stats": {
+      "overall": {
+        "gamesPlayed": 10,
+        "rushingYards": 900,
+        "touchdowns": 8,
+        "fumbles": 2
+      },
+      "weekly": [
+        { "week": 1, "rushingYards": 100, "touchdowns": 1, "fumbles": 0 },
+        { "week": 2, "rushingYards": 120, "touchdowns": 1, "fumbles": 0 },
+        { "week": 3, "rushingYards": 80, "touchdowns": 0, "fumbles": 1 },
+        { "week": 4, "rushingYards": 90, "touchdowns": 1, "fumbles": 0 }
+      ]
+    }
   },
   {
     "id": 3,
     "name": "Mike Johnson",
     "position": "WR",
     "overall": 88,
-    "age": 26
+    "age": 26,
+    "stats": {
+      "overall": {
+        "gamesPlayed": 10,
+        "receivingYards": 1100,
+        "touchdowns": 7,
+        "receptions": 65
+      },
+      "weekly": [
+        { "week": 1, "receivingYards": 120, "touchdowns": 1, "receptions": 6 },
+        { "week": 2, "receivingYards": 150, "touchdowns": 1, "receptions": 8 },
+        { "week": 3, "receivingYards": 90, "touchdowns": 0, "receptions": 5 },
+        { "week": 4, "receivingYards": 110, "touchdowns": 1, "receptions": 7 }
+      ]
+    }
   },
   {
     "id": 4,
     "name": "Chris Brown",
     "position": "CB",
     "overall": 80,
-    "age": 23
+    "age": 23,
+    "stats": {
+      "overall": {
+        "gamesPlayed": 10,
+        "tackles": 45,
+        "interceptions": 3,
+        "passDeflections": 8
+      },
+      "weekly": [
+        { "week": 1, "tackles": 5, "interceptions": 0, "passDeflections": 1 },
+        { "week": 2, "tackles": 4, "interceptions": 1, "passDeflections": 2 },
+        { "week": 3, "tackles": 6, "interceptions": 0, "passDeflections": 0 },
+        { "week": 4, "tackles": 3, "interceptions": 0, "passDeflections": 1 }
+      ]
+    }
   }
 ]
