@@ -1,0 +1,91 @@
+:root {
+    --primary-bg: #1a1a1a;
+    --secondary-bg: #2b2b2b;
+    --text-color: #e0e0e0;
+    --accent-color: #00aaff;
+    --border-color: #444;
+    --success-color: #4CAF50;
+    --error-color: #F44336;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+.container {
+    width: 100%;
+    max-width: 1200px;
+}
+h1, h2, h3 {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+.main-hub, .view {
+    background-color: var(--secondary-bg);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.hidden { display: none; }
+button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.2s;
+}
+button:hover { background-color: #0088cc; }
+.btn-secondary { background-color: #555; }
+.btn-secondary:hover { background-color: #777; }
+.btn-danger { background-color: var(--error-color); }
+.btn-danger:hover { background-color: #d32f2f; }
+.team-list, .player-list, .standings-table, .draft-board {
+    list-style: none;
+    padding: 0;
+}
+.team-list li, .player-list li {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.team-list li:last-child, .player-list li:last-child { border-bottom: none; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+th { background-color: #333; }
+#log {
+    background-color: #111;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    height: 150px;
+    overflow-y: scroll;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+}
+.trade-ui { display: flex; gap: 20px; }
+.trade-column { flex: 1; }
+select {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
