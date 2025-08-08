@@ -116,8 +116,26 @@ window.dispatchEvent(new Event("hashchange"));
           <h3>Standings</h3>
           <table class="table" id="standingsTable"></table>
         </section>
-
-        <section id="trade" hidden class="card"><h3>Trade Center</h3><div class="empty">WIP</div></section>
+<section id="trade" hidden class="card">
+  <h3>Trade Center</h3>
+  <div class="grid cols-2">
+    <div>
+      <label>Team A</label>
+      <select id="tradeTeamA"></select>
+      <div id="tradeListA" class="card" style="margin-top:8px;max-height:260px;overflow:auto"></div>
+    </div>
+    <div>
+      <label>Team B</label>
+      <select id="tradeTeamB"></select>
+      <div id="tradeListB" class="card" style="margin-top:8px;max-height:260px;overflow:auto"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:12px">
+    <button class="btn" id="tradeValidate">Validate</button>
+    <button class="btn primary" id="tradeExecute" disabled>Execute</button>
+    <div id="tradeMsg" style="align-self:center;opacity:.8"></div>
+  </div>
+</section>
         <section id="draft" hidden class="card"><h3>Draft</h3><div class="empty">WIP</div></section>
         <section id="settings" hidden class="card"><h3>Settings</h3><div class="empty">Theme, sliders, etc.</div></section>
       </main>
@@ -129,4 +147,12 @@ window.dispatchEvent(new Event("hashchange"));
     </section>
   </div>
   <script src="./Script.js" defer></script>
+    <div id="playerModal" hidden class="modal">
+  <div class="modal-card">
+    <button id="playerClose" class="btn" style="float:right">Close</button>
+    <h3 id="pName"></h3>
+    <div id="pMeta" style="opacity:.8"></div>
+    <table class="table" id="pStats"></table>
+  </div>
+    </div>
 </body>
