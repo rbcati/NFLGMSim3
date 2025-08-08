@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RosterPage from './components/RosterPage';
 import StatsPage from './components/StatsPage';
+import GameSimPage from './components/GameSimPage';
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/roster" element={<RosterPage />} />
         <Route path="/stats" element={<StatsPage />} />
+        <Route path="/simulate" element={<GameSimPage />} />
         {/* Add other routes as needed */}
       </Routes>
     </Router>
