@@ -459,3 +459,79 @@ function executeTrade(){
   document.getElementById("tradeExecute").disabled = true;
 }
 function msg(text){ document.getElementById("tradeMsg").textContent = text; }
+function renderTradeUI(){
+  const selA = document.getElementById("tradeTeamA");
+  const selB = document.getElementById("tradeTeamB");
+  selA.innerHTML = league.teams.map(t=>`<option value="${t.id}">${t.abv}</option>`).join("");
+  selB.innerHTML = league.teams.map(t=>`<option value="${t.id}">${t.abv}</option>`).join("");
+  selA.onchange = ()=> renderTradeLists();
+  selB.onchange = ()=> renderTradeLists();
+  renderTradeLists();
+  document.getElementById("tradeValidate").onclick = validateTrade;
+  document.getElementById("tradeExecute").onclick = executeTrade;
+}
+
+function renderTradeLists(){
+  const aId = +document.getElementById("tradeTeamA").value;
+  const bId = +document.getElementById("tradeTeamB").value;
+  const a = league.teams[aId], b = league.teams[bId];
+  document.getElementById("tradeListA").innerHTML = rosterCheckboxes(a, "A");
+  document.getElementById("tradeListB").innerHTML = rosterCheckboxes(b, "B");
+  document.getElementById("tradeExecute").disabled = true;
+  msg("");
+}
+function rosterCheckboxes(team, side){
+  const rows = team.roster
+    .slice().sort((x,y)=>y.ovr-x.ovr)
+    .map(p=>`<label style="display:flex;gap:8px;align-items:center;padding:6px 8px">
+      <input type="checkbox" name="sel${side}" value="${p.id}">
+      <span style="flex:1">${p.name}</span>
+      <span style="opacity:.8">${p.pos}</span>
+      <span class="num" style="margin-left:auto">${p.ovr}</span>
+    </label>`).join("");
+  return rows || "<div class='empty'>No players</div>";
+}
+function getSelected(side){
+  return [...document.querySelectorAll(`input[name="sel${side}"]:checked`)].map(i=>i.value);
+}
+function validateTrade(){
+  const aId = +document.getElementById("tradeTeamA").value;
+  const bId = +document.getElementById("tradeTeamB").value;
+  if (aId===bId){ return msg("Teams must be different"); }
+  const aSel = getSelected("A"), bSel = getSelected("B");
+  if (aSel.length===0 || bSel.length===0){ return msg("Both sides must include at least one player"); }
+  const a = league.teams[aId], b = league.teams[bId];
+  const afterA = a.roster.length - aSel.length + bSel.length;
+  const afterB = b.roster.length - bSel.length + aSel.length;
+  if (afterA>75 || afterB>75){ return msg("Roster size limit 75 exceeded"); }
+  const aValue = sumValue(a, aSel);
+  const bValue = sumValue(b, bSel);
+  const ratio = aValue > bValue ? aValue/bValue : bValue/aValue;
+  if (ratio > 2.5){
+    msg("Blocked. Trade value too lopsided");
+    document.getElementById("tradeExecute").disabled = true;
+    return;
+  }
+  msg("Valid trade");
+  document.getElementById("tradeExecute").disabled = false;
+}
+function sumValue(team, ids){
+  return ids.map(id=> team.roster.find(p=>p.id===id)?.ovr || 0).reduce((a,b)=>a+b,0);
+}
+function executeTrade(){
+  const aId = +document.getElementById("tradeTeamA").value;
+  const bId = +document.getElementById("tradeTeamB").value;
+  const aSel = getSelected("A"), bSel = getSelected("B");
+  const A = league.teams[aId], B = league.teams[bId];
+  const movingA = A.roster.filter(p=>aSel.includes(p.id));
+  const movingB = B.roster.filter(p=>bSel.includes(p.id));
+  A.roster = A.roster.filter(p=>!aSel.includes(p.id)).concat(movingB);
+  B.roster = B.roster.filter(p=>!bSel.includes(p.id)).concat(movingA);
+  saveLeague(league);
+  renderRoster(aId);
+  renderStandings();
+  renderTradeLists();
+  msg("Trade completed");
+  document.getElementById("tradeExecute").disabled = true;
+}
+function msg(text){ document.getElementById("tradeMsg").textContent = text; }
