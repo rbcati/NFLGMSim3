@@ -1,0 +1,109 @@
+// src/components/StatsPage.jsx
+import React, { useState, useEffect } from 'react';
+import { Table, Button, message } from 'antd';
+import axios from 'axios';
+import mockPlayers from '../data/mockPlayers.json';
+import PlayerStatsModal from './PlayerStatsModal';
+
+const StatsPage = () => {
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      setLoading(true);
+      try {
+        // Option 1: Use real API (uncomment to use ESPN API or similar)
+        /*
+        const response = await axios.get(
+          'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/1/athletes'
+        );
+        const formattedPlayers = response.data.athletes.map(player => ({
+          id: player.id,
+          name: player.fullName,
+          position: player.position.abbreviation,
+          stats: {
+            overall: {
+              gamesPlayed: 10, // Placeholder
+              passingYards: Math.random() * 2000 + 1000, // Example stat
+              touchdowns: Math.floor(Math.random() * 20),
+              interceptions: Math.floor(Math.random() * 10),
+            },
+            weekly: [], // Add weekly stats if API provides
+          },
+        }));
+        setPlayers(formattedPlayers);
+        */
+
+        // Option 2: Use mock data
+        setPlayers(mockPlayers);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        message.error('Failed to load stats. Using mock data.');
+        setPlayers(mockPlayers);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlayers();
+  }, []);
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      title: 'Position',
+      dataIndex: 'position',
+      sorter: (a, b) => a.position.localeCompare(b.position),
+    },
+    {
+      title: 'Games Played',
+      dataIndex: ['stats', 'overall', 'gamesPlayed'],
+      sorter: (a, b) => a.stats.overall.gamesPlayed - b.stats.overall.gamesPlayed,
+    },
+    {
+      title: 'Key Stat',
+      render: (_, record) => {
+        const { position, stats } = record;
+        if (position === 'QB') return `${stats.overall.passingYards} Pass Yds`;
+        if (position === 'RB') return `${stats.overall.rushingYards} Rush Yds`;
+        if (position === 'WR') return `${stats.overall.receivingYards} Rec Yds`;
+        if (position === 'CB') return `${stats.overall.tackles} Tackles`;
+        return '-';
+      },
+    },
+    {
+      title: 'Actions',
+      render: (_, record) => (
+        <Button onClick={() => setSelectedPlayer(record)}>View Weekly Stats</Button>
+      ),
+    },
+  ];
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Team Stats</h1>
+      <Table
+        columns={columns}
+        dataSource={players}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+      />
+      {selectedPlayer && (
+        <PlayerStatsModal
+          player={selectedPlayer}
+          visible={!!selectedPlayer}
+          onClose={() => setSelectedPlayer(null)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default StatsPage;
