@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gridiron GM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 id="header">Gridiron GM</h1>
+
+    <div id="hubView" class="main-hub">
+        <h2 id="team-name-header">Your Team</h2>
+        <p id="season-info">Season: 1 | Week: 1 | Record: 0-0</p>
+        <button id="simWeekBtn">Simulate Next Week</button>
+        <hr>
+        <button onclick="showView('rosterView')">View Roster</button>
+        <button onclick="showView('standingsView')">View Standings</button>
+        <button onclick="showView('tradeView')">Trade Center</button>
+        <button onclick="showView('trainingView')">Train Player</button>
+        <hr>
+        <h3>Game Log</h3>
+        <div id="log">Welcome, GM!</div>
+    </div>
+    
+    <div id="gameOverView" class="view hidden">
+        <h2>Game Over</h2>
+        <p id="fireReason">The owner has decided to go in a different direction. You have been fired.</p>
+        <button id="startNewGameBtn">Start New Game</button>
+    </div>
+
+    <div id="rosterView" class="view hidden">
+        <h2>Your Roster</h2>
+        <table id="rosterTable">
+            <thead><tr><th>Name</th><th>Pos</th><th>Age</th><th>OVR</th><th>Offense</th><th>Defense</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <button class="btn-secondary" onclick="showView('hubView')">Back to Hub</button>
+    </div>
+
+    <div id="standingsView" class="view hidden">
+        <h2>League Standings</h2>
+        <table id="standingsTable">
+            <thead><tr><th>Team</th><th>W</th><th>L</th><th>T</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <button class="btn-secondary" onclick="showView('hubView')">Back to Hub</button>
+    </div>
+    
+    <div id="trainingView" class="view hidden">
+        <h2>Weekly Player Training</h2>
+        <p>You can improve one attribute for one player each week. This choice is final for the week.</p>
+        <select id="trainingPlayerSelect"></select>
+        <select id="trainingAttributeSelect">
+            <option value="off">Offense</option>
+            <option value="def">Defense</option>
+        </select>
+        <button id="confirmTrainingBtn">Confirm Training</button>
+        <br>
+        <button class="btn-secondary" onclick="showView('hubView')">Back to Hub</button>
+    </div>
+
+    <div id="tradeView" class="view hidden">
+        <h2>Trade Center</h2>
+        <p>Propose a trade to another team.</p>
+        <div class="trade-ui">
+            <div class="trade-column">
+                <h3>Your Assets</h3>
+                <select id="userAssets" size="10" multiple></select>
+            </div>
+            <div class="trade-column">
+                <h3>Their Assets</h3>
+                <label>Trade Partner:</label>
+                <select id="tradePartnerSelect" onchange="updateTradePartnerAssets()"></select>
+                <select id="partnerAssets" size="10" multiple></select>
+            </div>
+        </div>
+        <button id="proposeTradeBtn">Propose Trade</button>
+        <br>
+        <button class="btn-secondary" onclick="showView('hubView')">Back to Hub</button>
+    </div>
+    
+    <div id="offseasonView" class="view hidden">
+        <h2 id="offseason-header">Offseason</h2>
+        <div id="freeAgencyStage">
+            <h3>Free Agency</h3>
+            <p>Top free agents available. You can sign one player.</p>
+            <table id="freeAgentsTable">
+                <thead><tr><th>Name</th><th>Pos</th><th>Age</th><th>OVR</th><th>Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="draftStage" class="hidden">
+            <h3>The Draft</h3>
+            <p id="draftPickInfo"></p>
+            <table id="draftBoardTable">
+                <thead><tr><th>Pick</th><th>Player</th><th>Pos</th><th>OVR</th><th>Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button id="advanceOffseasonBtn">Advance to Draft</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
