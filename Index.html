@@ -66,3 +66,67 @@ window.addEventListener("hashchange", () => {
   show(routes.includes(seg) ? seg : "hub");
 });
 window.dispatchEvent(new Event("hashchange"));
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">NFL GM Simulator</div>
+      <nav class="nav">
+        <a href="#/hub">Hub</a>
+        <a href="#/roster">Roster</a>
+        <a href="#/schedule">Schedule</a>
+        <a href="#/standings">Standings</a>
+        <a href="#/trade">Trade</a>
+        <a href="#/draft">Draft</a>
+        <a href="#/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <section>
+      <div class="topbar">
+        <button class="btn primary" id="newLeagueBtn">New League</button>
+        <button class="btn" id="simWeekBtn">Sim Week</button>
+        <button class="btn" id="exportBtn">Export</button>
+        <label class="btn"><input id="importFile" type="file" accept="application/json">Import</label>
+        <div id="saveDot" style="margin-left:auto;opacity:.7">autosaved</div>
+      </div>
+
+      <main class="main">
+        <section id="hub" class="grid cols-2">
+          <div class="card">
+            <h3>Current League</h3>
+            <div id="leagueMeta" class="empty">No league yet. Create one.</div>
+          </div>
+          <div class="card">
+            <h3>Upcoming Week</h3>
+            <div id="nextWeek" class="empty">—</div>
+          </div>
+        </section>
+
+        <section id="roster" hidden class="card">
+          <h3>Roster</h3>
+          <table class="table" id="rosterTable"></table>
+        </section>
+
+        <section id="schedule" hidden class="card">
+          <h3>Schedule</h3>
+          <div id="scheduleList"></div>
+        </section>
+
+        <section id="standings" hidden class="card">
+          <h3>Standings</h3>
+          <table class="table" id="standingsTable"></table>
+        </section>
+
+        <section id="trade" hidden class="card"><h3>Trade Center</h3><div class="empty">WIP</div></section>
+        <section id="draft" hidden class="card"><h3>Draft</h3><div class="empty">WIP</div></section>
+        <section id="settings" hidden class="card"><h3>Settings</h3><div class="empty">Theme, sliders, etc.</div></section>
+      </main>
+
+      <div class="footerbar">
+        <button class="btn" id="simSeasonBtn">Sim Season</button>
+        <div style="opacity:.7">Week <span id="weekNum">0</span></div>
+      </div>
+    </section>
+  </div>
+  <script src="./Script.js" defer></script>
+</body>
