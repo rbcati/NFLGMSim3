@@ -31,3 +31,8 @@ input[type="file"]{display:none}
 .modal[hidden]{display:none}
 .row-hover tr{cursor:pointer}
 .row-hover tr:hover{background:#141c25}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center}
+.modal-card{background:#121821;border:1px solid #1f2835;border-radius:14px;max-width:720px;width:92%;padding:16px}
+.modal[hidden]{display:none}
+.row-hover tr{cursor:pointer}
+.row-hover tr:hover{background:#141c25}
