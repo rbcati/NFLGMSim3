@@ -11,24 +11,45 @@
 <div class="container">
     <h1 id="header">Gridiron GM</h1>
 
-    <div id="hubView" class="main-hub">
+    <div id="teamSelectView" class="view">
+        <h2>Choose Your Team</h2>
+        <p>Select a team to begin your career as a General Manager.</p>
+        <div id="teamSelectList" class="team-grid">
+            </div>
+    </div>
+
+    <div id="hubView" class="view hidden">
         <h2 id="team-name-header">Your Team</h2>
         <p id="season-info">Season: 1 | Week: 1 | Record: 0-0</p>
-        <button id="simWeekBtn">Simulate Next Week</button>
+        <button id="simWeekBtn">Advance Week</button>
         <div class="hub-actions">
-            <button id="rosterBtn">Roster</button>
-            <button id="standingsBtn">Standings</button>
-            <button id="tradeBtn">Trade Center</button>
-            <button id="trainingBtn">Train Player</button>
+            <button data-view="rosterView">My Roster</button>
+            <button data-view="standingsView">Standings</button>
+            <button data-view="leagueView">League</button>
+            <button data-view="tradeView">Trade Center</button>
+            <button data-view="trainingView">Train Player</button>
         </div>
         <h3>Game Log</h3>
         <div id="log">Welcome, GM!</div>
     </div>
-    
+
     <div id="rosterView" class="view hidden">
-        <h2>Your Roster</h2>
+        <h2 id="roster-header">Roster</h2>
+        <div id="roster-coaches"></div>
         <table id="rosterTable"></table>
-        <button class="btn-secondary btn-back">Back to Hub</button>
+        <button class="btn-back">Back</button>
+    </div>
+
+    <div id="leagueView" class="view hidden">
+        <h2>League Teams</h2>
+        <table id="leagueTable"></table>
+        <button class="btn-back">Back to Hub</button>
+    </div>
+    
+    <div id="offseasonView" class="view hidden">
+        <h2 id="offseason-header">Offseason</h2>
+        <div id="offseason-summary"></div>
+        <button id="startNewSeasonBtn">Start Next Season</button>
     </div>
 
     </div>
