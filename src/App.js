@@ -71,3 +71,17 @@ function App() {
     </ThemeProvider>
   );
 }
+import { TeamProvider } from './context/TeamContext';
+
+function App() {
+  return (
+    <TeamProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>{/* Routes */}</Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </TeamProvider>
+  );
+}
