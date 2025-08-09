@@ -144,3 +144,36 @@ const Navbar = () => {
 };
 
 export default Navbar;
+// src/components/Navbar.js
+
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+// 👇 1. Make sure you import Link from react-router-dom
+import { Link } from 'react-router-dom';
+
+function Navbar() {
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+          NFL GM Simulator
+        </Typography>
+
+        {/* 👇 2. This is the magic combo for the Home button */}
+        <Button color="inherit" component={Link} to="/">
+          Home
+        </Button>
+        
+        {/* You can do the same for other links, like Roster */}
+        <Button color="inherit" component={Link} to="/roster">
+          Roster
+        </Button>
+        
+        {/* Add other nav buttons here... */}
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+export default Navbar;
+
