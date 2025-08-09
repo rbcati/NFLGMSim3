@@ -50,3 +50,24 @@ function App() {
 }
 
 export default App;
+// src/App.js
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    mode: 'light', // Toggle to 'dark' for dark mode
+    primary: { main: '#003087' },
+    secondary: { main: '#d50a0a' },
+  },
+});
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>{/* Routes */}</Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+}
