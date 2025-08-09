@@ -63,3 +63,11 @@ function Roster() {
 
 export default Roster;
 
+{players.map((player) => {
+  console.log('Checking player object:', player); // <-- ADD THIS LINE
+  return (
+    <TableRow key={player.id}>
+      {/* ... your code */}
+    </TableRow>
+  )
+})}
