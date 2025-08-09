@@ -86,3 +86,17 @@ const TradeCenter = () => {
 };
 
 export default TradeCenter;
+
+// Add salary cap check
+const handleTrade = () => {
+  const totalSalary = selectedPlayers.reduce((sum, player) => sum + (player.salary || 0), 0);
+  const salaryCap = 255000000; // 2025 NFL cap (example)
+  const currentCapUsed = yourTeam.reduce((sum, player) => sum + (player.salary || 0), 0);
+  if (totalSalary + currentCapUsed > salaryCap) {
+    alert('Trade exceeds salary cap!');
+    return;
+  }
+  // Process trade
+  saveTrade({ players: selectedPlayers, timestamp: new Date() });
+  alert('Trade successful!');
+};
