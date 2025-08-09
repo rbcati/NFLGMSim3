@@ -41,3 +41,10 @@ function PlayerData() {
 }
 
 export default PlayerData;
+import { useParams } from 'react-router-dom';
+
+function PlayerData() {
+  const { id } = useParams();
+  console.log('ID from URL:', id); // <-- ADD THIS LINE
+  // ... rest of the component
+}
