@@ -169,3 +169,21 @@ function Pagination({ page, pageCount, onPage }) {
     </div>
   );
 }
+// src/pages/Players.jsx
+import { Link } from "react-router-dom";
+
+// inside <tbody>
+<tr key={p.id} className="border-b hover:bg-slate-50">
+  <td className="py-2">
+    <div className="font-medium">
+      <Link
+        to={`/players/${p.id}`}
+        className="underline underline-offset-2 hover:no-underline focus:outline-none focus:ring-2 focus:ring-slate-400 rounded"
+      >
+        {p.name}
+      </Link>
+    </div>
+    <div className="text-xs text-slate-500">Age {p.age}</div>
+  </td>
+  {/* rest of cells */}
+</tr>
