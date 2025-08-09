@@ -27,6 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/roster" element={<Roster />} />
+  <Route path="/player/:id" element={<PlayerData />} />
           <Route path="/trade" element={<TradeCenter />} />
           <Route path="/draft" element={<Draft />} /> {/* Route for Draft */}
           <Route path="/free-agency" element={<FreeAgency />} />
@@ -49,7 +50,6 @@ import TradeCenter from './components/TradeCenter';
 import Draft from './components/Draft';
 import FreeAgency from './components/FreeAgency';
 import Season from './components/Season';
-
 const theme = createTheme({
   palette: {
     mode: 'light',
